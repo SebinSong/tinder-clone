@@ -1,0 +1,48 @@
+@import 'util';
+
+*, *:after, *:before {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html, body {
+  position: relative;
+}
+
+body {
+  background: $bg;
+}
+
+:root {
+  font-size: 17px;
+}
+
+.app-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.65rem;
+  color: $text;
+  text-shadow: 0.5em 0.5em 0.7em rgba(0, 0, 0, 0.35);
+  text-align: center;
+
+  > *:not(:first-child) {
+    margin-top: 1.5rem;
+  }
+  .app-description {
+    font-size: 0.8rem;
+  }
+}
+
+.app-image {
+  width: 11.5rem;
+
+  box-shadow: 0 0 1.35rem 0.4rem rgba(0, 0, 0, 0.3);
+}
