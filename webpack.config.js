@@ -57,7 +57,7 @@ module.exports = (webpackEnv) => {
 
   let config = {
     mode: webpackEnv,
-    entry: [ './src/index.js' ].filter(Boolean),
+    entry: [ '@babel/polyfill', './src/index.js' ].filter(Boolean),
     output: {
       filename: isProduction
         ? 'static/js/[name].[contenthash:8].js'
