@@ -11,8 +11,8 @@ const jsRegex = /\.js$/;
 const imageRegex = [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.svg$/];
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
-const sassRegex = /\.(scss|sass)$/;
-const sassModuleRegex = /\.module\.(scss|sass)$/;
+const sassRegex = /\.(s[ac]ss)$/;
+const sassModuleRegex = /\.module\.(s[ac]ss)$/;
 
 // paths
 const resolvePath = relPath => path.resolve(__dirname, relPath);
@@ -46,7 +46,9 @@ module.exports = (webpackEnv) => {
       loaders.push({
         loader: require.resolve('sass-loader'),
         options: {
-          includePaths: [ appSrc ],
+          sassOptions: {
+            includePaths: [ appSrc ]
+          }
           // data: `@import 'util'`
         }
       })
