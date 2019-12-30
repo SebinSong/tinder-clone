@@ -121,7 +121,8 @@ module.exports = (webpackEnv) => {
                       '@babel/preset-react'
                     ],
                     plugins: [
-                      '@babel/plugin-proposal-class-properties'
+                      '@babel/plugin-proposal-class-properties',
+                      '@babel/plugin-syntax-dynamic-import'
                     ],
                     cacheCompression: isProduction,
                     compact: isProduction
