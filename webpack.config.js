@@ -88,7 +88,9 @@ module.exports = (webpackEnv) => {
         "@": appSrc,
         "@scss": path.join(appSrc, 'assets/scss'),
         "@media": path.join(appSrc, 'assets/media')
-      }
+      },
+      extensions: ['.js', '.json', '.jsx'],
+      mainFiles: ['index']
     },
     module: {
       rules: [
