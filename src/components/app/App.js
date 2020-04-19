@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import myImage from '@media/img1.png';
-import "@scss/app.scss";
+import "./app.scss";
 
 class App extends Component {
   render() {

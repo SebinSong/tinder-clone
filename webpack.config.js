@@ -1,10 +1,12 @@
 const path = require('path');
+const webpack = require('webpack');
 
 // plugins
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
 const MiniCssPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 //regexes
 const jsRegex = /\.js$/;
@@ -18,11 +20,15 @@ const sassModuleRegex = /\.module\.(s[ac]ss)$/;
 const resolvePath = relPath => path.resolve(__dirname, relPath);
 const appSrc = resolvePath('src');
 const appHtml = resolvePath('public/index.html');
+const appSass = path.join(appSrc, 'assets/scss')
+
+// misc constants
+const imageInlineSizeLimit = '10000'
 
 module.exports = (webpackEnv) => {
   const isDevelopment = webpackEnv === 'development';
   const isProduction = webpackEnv === 'production';
-  const publicPath = isProduction? './' : isDevelopment && '/';
+  const publicPath = isProduction ? '' : isDevelopment && '/';
 
   const getStyleLoaders = (cssOptions = {}, isSass = false) => {
     const loaders = [
@@ -38,7 +44,13 @@ module.exports = (webpackEnv) => {
         options: cssOptions
       },
       {
-        loader: require.resolve('postcss-loader')
+        loader: require.resolve('postcss-loader'),
+        options: {
+          ident: 'postcss',
+          plugins: () => [
+            require('postcss-preset-env')()
+          ]
+        }
       }
     ].filter(Boolean);
 
@@ -47,9 +59,9 @@ module.exports = (webpackEnv) => {
         loader: require.resolve('sass-loader'),
         options: {
           sassOptions: {
-            includePaths: [ appSrc ]
-          }
-          // data: `@import 'util'`
+            includePaths: [ appSass ]
+          },
+          prependData: `@import 'variables';`
         }
       })
     }
@@ -59,7 +71,7 @@ module.exports = (webpackEnv) => {
 
   let config = {
     mode: webpackEnv,
-    entry: [ '@babel/polyfill', './src/index.js' ].filter(Boolean),
+    entry: [ './src/index.js' ],
     output: {
       filename: isProduction
         ? 'static/js/[name].[contenthash:8].js'
@@ -103,7 +115,7 @@ module.exports = (webpackEnv) => {
                 {
                   loader: require.resolve('url-loader'),
                   options: {
-                    limit: 10000,
+                    limit: imageInlineSizeLimit,
                     name: 'static/media/[name].[hash:8].[ext]'
                   }
                 }
@@ -121,8 +133,7 @@ module.exports = (webpackEnv) => {
                       '@babel/preset-react'
                     ],
                     plugins: [
-                      '@babel/plugin-proposal-class-properties',
-                      '@babel/plugin-syntax-dynamic-import'
+                      '@babel/plugin-proposal-class-properties'
                     ],
                     cacheCompression: isProduction,
                     compact: isProduction
@@ -192,16 +203,38 @@ module.exports = (webpackEnv) => {
         )
       ),
       isProduction && new MiniCssPlugin({
-        filename: 'static/css/styles.[hash].css'
-      })
+        filename: 'static/css/[name].[contenthash:8].css',
+        chunkFilename: 'static/css/[name].[contenthash:8].chunk.css'
+      }),
+      isDevelopment && new webpack.HotModuleReplacementPlugin()
     ].filter(Boolean),
     optimization: {
       minimize: isProduction,
       minimizer: [
-        new TerserPlugin()
+        new TerserPlugin({
+          terserOptions: {
+            parse: { ecma: 8 },
+            compress: {
+              ecma: 5,
+              warnings: false,
+              comparisons: false,
+              inline: 2
+            },
+            mangle: { safari10: true },
+            output: {
+              ecma: 5,
+              comments: false,
+              ascii_only: true
+            },
+          },
+          cache: true
+        }),
+        new OptimizeCssAssetsPlugin()
       ],
       splitChunks: {
-        chunks: 'all'
+        chunks: 'all',
+        // remove this when
+        name: isProduction ? false : true
       }
     }
   }
@@ -211,7 +244,7 @@ module.exports = (webpackEnv) => {
       config,
       {
         devServer: {
-          hot:true,
+          hot: true,
           compress: true,
           overlay: true,
           contentBase: resolvePath('public')
