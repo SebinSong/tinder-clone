@@ -42,15 +42,6 @@ module.exports = (webpackEnv) => {
       {
         loader: require.resolve('css-loader'),
         options: cssOptions
-      },
-      {
-        loader: require.resolve('postcss-loader'),
-        options: {
-          ident: 'postcss',
-          plugins: () => [
-            require('postcss-preset-env')()
-          ]
-        }
       }
     ].filter(Boolean);
 
@@ -227,9 +218,8 @@ module.exports = (webpackEnv) => {
               ecma: 5,
               comments: false,
               ascii_only: true
-            },
-          },
-          cache: true
+            }
+          }
         }),
         new OptimizeCssAssetsPlugin()
       ],
