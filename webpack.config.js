@@ -78,7 +78,8 @@ module.exports = (webpackEnv) => {
       alias: {
         "@": appSrc,
         "@scss": path.join(appSrc, 'assets/scss'),
-        "@media": path.join(appSrc, 'assets/media')
+        "@media": path.join(appSrc, 'assets/media'),
+        "@utils": path.join(appSrc, 'utils')
       },
       extensions: ['.js', '.json', '.jsx'],
       mainFiles: ['index']

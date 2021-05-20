@@ -1,6 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './components/app/App';
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-const Root = document.querySelector('#root');
-ReactDOM.render(<App />, Root);
+// global css
+import '@scss/index.scss'
+// components
+import App from './components/app/App'
+
+const Root = document.querySelector('#root')
+ReactDOM.render(<App />, Root)

@@ -1,5 +1,22 @@
 .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100; // want them always to be on the top
+  border: $toolbar-border;
+
   &__logo {
     object-fit: contain;
+    height: 5rem;
+  }
+
+  &__icon {
+    padding: 2rem;
+    box-sizing: unset; // specifying 'border-box' to it creates a weird issue.
+  }
+
+  &__btn {
+    max-width: 6rem;
+    max-height: 6rem;
   }
 }
